@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/LayoutStyle"
+    tools:context=".SignInFragment">
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        style="@style/StatusBarLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="15dp"
+            android:text="To Do List"
+            android:textSize="40sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/middleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
+        android:layout_below="@id/topLayout"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/emailSignInFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Phone Number, email or username"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="8dp"
+            android:paddingStart="20dp"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/passwordSignInFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Password"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:paddingStart="20dp"
+            android:textSize="14sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:animateLayoutChanges="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButtonSignInFragment"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:gravity="center"
+                android:text="Log in"
+                android:textAllCaps="false" />
+
+            <ProgressBar
+                android:id="@+id/progressBaSignInFragment"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/forgetPasswordSignInFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Forget Your login details? Get help Signing in."
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/white"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="OR" />
+
+        </FrameLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginGoogleButtonSignInFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Log in with Google"
+            android:textAllCaps="false"
+            app:icon="@drawable/icon_google"
+            app:iconPadding="10dp"
+            app:iconTint="@null"
+            app:iconSize="20dp" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_colour" />
+
+        <TextView
+            android:id="@+id/dontHaveAccountSignInFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Don't have an account? Sign Up "
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

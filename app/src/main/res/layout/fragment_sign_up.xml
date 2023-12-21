@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".SignUpFragment">
+
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        style="@style/StatusBarLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="15dp"
+            android:text="To Do List"
+            android:textSize="40sp" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/middleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
+        android:layout_below="@id/topLayout"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginGoogleButtonSignUpFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Log in with Google"
+            android:textAllCaps="false"
+            app:icon="@drawable/icon_google"
+            app:iconPadding="10dp"
+            app:iconTint="@null"
+            app:iconSize="20dp" />
+
+        <FrameLayout
+            android:layout_width="250dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/white"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="OR" />
+
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/emailSignUpFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Phone Number or email "
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="8dp"
+            android:paddingStart="20dp"
+            android:textSize="11sp" />
+
+        <EditText
+            android:id="@+id/passwordSignUpFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Password"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:paddingStart="20dp"
+            android:textSize="11sp" />
+
+        <EditText
+            android:id="@+id/passwordConfirmSignUpFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Confirm Password"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:paddingStart="20dp"
+            android:textSize="11sp" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:animateLayoutChanges="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/signupButtonSignUpFragment"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:text="Sign up"
+                android:textAllCaps="false" />
+
+            <ProgressBar
+                android:id="@+id/progressBaSignUpFragment"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="By signing up, You agree to our Terms and Condition"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_colour" />
+
+        <TextView
+            android:id="@+id/haveAccountSignUpFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Have an account? Log in  "
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+
