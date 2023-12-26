@@ -18,53 +18,67 @@
         android:text="To Do List"
         android:textSize="40sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewInCompleteHomeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topLayout"
-        android:layout_marginTop="20dp"
-        android:scrollbars="vertical" />
 
-    <LinearLayout
-        android:id="@+id/completedLayout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recyclerViewInCompleteHomeFragment"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_ripplefactor"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:padding="15dp"
-        android:visibility="visible">
+        android:layout_height="match_parent"
+        android:layout_below="@id/topLayout">
 
-        <TextView
-            android:id="@+id/taskCompleteUpToDateTaskItem"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1"
-            android:clickable="false"
-            android:text="Completed"
-            android:textSize="16sp" />
+            android:paddingBottom="70dp"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/icon_completed_visible" />
-
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInCompleteHomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCompleteHomeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/completedLayout"
-        android:scrollbars="vertical" />
+            <LinearLayout
+                android:id="@+id/completedLayout"
+                style="@style/StatusBarLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/taskCompleteUpToDateTaskItem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:text="Completed"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/completedImage"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="30dp"
+                    android:src="@drawable/icon_completed_invisible" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCompleteHomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
     <LinearLayout

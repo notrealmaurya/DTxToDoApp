@@ -43,11 +43,11 @@ class HomeFragment : Fragment(), OnItemClickListener {
     private var isDetailVisible = false
     private var isDateVisible = false
     private var isImportant: Boolean = false
-    private var isChecked: Boolean = false
     private lateinit var adapterToDoComplete: AdapterToDo
     private lateinit var adapterToDoInComplete: AdapterToDo
     private lateinit var inCompleteList: MutableList<DataToDo>
     private lateinit var completeList: MutableList<DataToDo>
+    private var isRecyclerViewVisible = false
 
     companion object {
         private const val KEY_SELECTED_DATE = "KEY_SELECTED_DATE"
@@ -68,6 +68,9 @@ class HomeFragment : Fragment(), OnItemClickListener {
         inCompleteList = mutableListOf()
         completeList = mutableListOf()
 
+
+        fragmentHomeBinding.recyclerViewCompleteHomeFragment.isNestedScrollingEnabled=false
+        fragmentHomeBinding.recyclerViewInCompleteHomeFragment.isNestedScrollingEnabled=false
 
         fetchDataFromDatabase()
         listeners()
@@ -107,12 +110,24 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
                 adapterToDoInComplete.notifyDataSetChanged()
                 adapterToDoComplete.notifyDataSetChanged()
+                if (completeList.isEmpty()){
+                    fragmentHomeBinding.completedLayout.visibility=View.GONE
+                    fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility=View.GONE
+                }
+                else{
+                    isRecyclerViewVisible=false
+                    fragmentHomeBinding.completedLayout.visibility=View.VISIBLE
+                    fragmentHomeBinding.completedImage.setImageResource(R.drawable.icon_completed_invisible)
+
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
             }
         })
+
+
     }
 
     private fun processTaskSnapshot(
@@ -165,7 +180,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
     private fun listeners() {
 
         val incompleteTasksRef = dataBaseRef.child("incompleteTasks")
-        val completeTasksRef = dataBaseRef.child("completeTasks")
 
         //ToolbarAddTask
         fragmentHomeBinding.addTaskHomeFragment.setOnClickListener {
@@ -262,338 +276,231 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
         }
 
-    }
 
+        fragmentHomeBinding.completedLayout.setOnClickListener {
+            isRecyclerViewVisible = !isRecyclerViewVisible // Toggle the visibility state
 
-    override fun onItemClickListener(position: Int, isComplete: Boolean) {
-
-        if (isComplete) {
-            val completeTasksRef = dataBaseRef.child("completeTasks")
-            val completeItems = completeList[position]
-
-            val AddTaskDialog =
-                BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
-            val AddTaskView = layoutInflater.inflate(R.layout.bottomsheet_add_task, null)
-            AddTaskDialog.setContentView(AddTaskView)
-            AddTaskDialog.setCanceledOnTouchOutside(true)
-
-            val updateImage = AddTaskView.findViewById<ImageView>(R.id.updateImage)
-            val lotteImage = AddTaskView.findViewById<LottieAnimationView>(R.id.lotteView)
-            val deleteUpdateLayout = AddTaskView.findViewById<LinearLayout>(R.id.updateDeleteLayout)
-
-            val addTaskText = AddTaskView.findViewById<EditText>(R.id.addTaskEditText)
-            val addTaskDetailsText = AddTaskView.findViewById<EditText>(R.id.addDetailsEditText)
-            val addDateChipText = AddTaskView.findViewById<Chip>(R.id.addDateChipText)
-            val addTaskUpdateText = AddTaskView.findViewById<TextView>(R.id.addTaskOKText)
-            val addTaskDeleteText = AddTaskView.findViewById<TextView>(R.id.addTaskDeleteText)
-            val addTaskMarkAsCompletedText =
-                AddTaskView.findViewById<TextView>(R.id.addTaskMarkAsCompletedText)
-
-            val addDateButton = AddTaskView.findViewById<ImageView>(R.id.addDateButton)
-            val addDetailsButton = AddTaskView.findViewById<ImageView>(R.id.addDetailsButton)
-            val addImportantButton = AddTaskView.findViewById<ImageView>(R.id.addImportantButton)
-
-            updateImage.visibility = View.VISIBLE
-            deleteUpdateLayout.visibility = View.VISIBLE
-            lotteImage.visibility = View.GONE
-
-            addTaskText.requestFocus()
-            AddTaskDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            addTaskDetailsText.visibility = View.VISIBLE
-            addDateChipText.visibility = View.VISIBLE
-            addTaskUpdateText.text = "Update"
-
-            addTaskText.setText(completeItems.taskName)
-            addTaskDetailsText.setText(completeItems.taskDetails)
-            addDateChipText.text = completeItems.taskCompleteUpToDate
-
-            if (!completeItems.isImportant) {
-                addImportantButton.setImageResource(R.drawable.icon_mark_not_important)
+            if (isRecyclerViewVisible) {
+                fragmentHomeBinding.completedImage.setImageResource(R.drawable.icon_completed_visible)
+                fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility = View.VISIBLE
             } else {
-                addImportantButton.setImageResource(R.drawable.icon_mark_important)
+                fragmentHomeBinding.completedImage.setImageResource(R.drawable.icon_completed_invisible)
+                fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility = View.GONE
             }
-
-            isDetailVisible = true
-            addDetailsButton.setImageResource(R.drawable.icon_details_selected)
-            addDateButton.setImageResource(R.drawable.icon_date_selected)
-
-            addDetailsButton.setOnClickListener {
-                if (!isDetailVisible) {
-                    addTaskDetailsText.visibility = View.VISIBLE
-                    addDetailsButton.setImageResource(R.drawable.icon_details_selected)
-                    isDetailVisible = true
-                } else {
-                    addTaskDetailsText.text.clear()
-                    addTaskDetailsText.visibility = View.GONE
-                    addDetailsButton.setImageResource(R.drawable.icon_details)
-                    isDetailVisible = false
-                }
-            }
-
-            addDateButton.setOnClickListener {
-                if (!isDateVisible) {
-                    addDateButton.setImageResource(R.drawable.icon_date_selected)
-                    showDatePickerDialog(addDateChipText, addDateButton)
-                } else {
-                    addDateChipText.text = ""
-                    addDateChipText.visibility = View.GONE
-                    addDateButton.setImageResource(R.drawable.icon_date)
-                    val sharedPreferences =
-                        requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
-                    sharedPreferences.edit().clear().apply()
-                    isDateVisible = false
-                }
-            }
-
-            addDateChipText.setOnClickListener {
-                showDatePickerDialog(addDateChipText, addDateButton)
-            }
-
-            addImportantButton.setOnClickListener {
-                if (!completeItems.isImportant) {
-                    addImportantButton.setImageResource(R.drawable.icon_mark_important)
-                    completeItems.isImportant = true
-                } else {
-                    completeItems.isImportant = false
-                    addImportantButton.setImageResource(R.drawable.icon_mark_not_important)
-                }
-            }
-
-            addTaskUpdateText.setOnClickListener {
-                val taskName = addTaskText.text.toString()
-                val taskDetails = addTaskDetailsText.text.toString()
-                val taskDate = addDateChipText.text.toString()
-                val taskId = completeItems.id
-                val important = completeItems.isImportant
-
-                if (taskName.isNotEmpty()) {
-                    val taskReference = completeTasksRef.child(taskId)
-                    val updatedTask =
-                        DataToDo(taskId, taskName, taskDetails, taskDate, important)
-                    taskReference.setValue(updatedTask).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT).show()
-                        }
-                    }.addOnFailureListener {
-                        Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
-                    }
-                    AddTaskDialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Please Enter Task Name", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            addTaskDeleteText.setOnClickListener {
-                val taskId = completeItems.id
-                if (taskId.isNotEmpty()) {
-                    val taskReference = completeTasksRef.child(taskId)
-                    taskReference.removeValue().addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show()
-                            adapterToDoInComplete.notifyDataSetChanged()
-                        } else {
-                            Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                    AddTaskDialog.dismiss()
-                }
-            }
-
-            AddTaskDialog.show()
-
-        } else {
-            val incompleteTasksRef = dataBaseRef.child("incompleteTasks")
-            val inCompleteItems = inCompleteList[position]
-
-            val AddTaskDialog =
-                BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
-            val AddTaskView = layoutInflater.inflate(R.layout.bottomsheet_add_task, null)
-            AddTaskDialog.setContentView(AddTaskView)
-            AddTaskDialog.setCanceledOnTouchOutside(true)
-
-            val updateImage = AddTaskView.findViewById<ImageView>(R.id.updateImage)
-            val lotteImage = AddTaskView.findViewById<LottieAnimationView>(R.id.lotteView)
-            val deleteUpdateLayout = AddTaskView.findViewById<LinearLayout>(R.id.updateDeleteLayout)
-
-            val addTaskText = AddTaskView.findViewById<EditText>(R.id.addTaskEditText)
-            val addTaskDetailsText = AddTaskView.findViewById<EditText>(R.id.addDetailsEditText)
-            val addDateChipText = AddTaskView.findViewById<Chip>(R.id.addDateChipText)
-            val addTaskUpdateText = AddTaskView.findViewById<TextView>(R.id.addTaskOKText)
-            val addTaskDeleteText = AddTaskView.findViewById<TextView>(R.id.addTaskDeleteText)
-            val addTaskMarkAsCompletedText =
-                AddTaskView.findViewById<TextView>(R.id.addTaskMarkAsCompletedText)
-
-            val addDateButton = AddTaskView.findViewById<ImageView>(R.id.addDateButton)
-            val addDetailsButton = AddTaskView.findViewById<ImageView>(R.id.addDetailsButton)
-            val addImportantButton = AddTaskView.findViewById<ImageView>(R.id.addImportantButton)
-
-            updateImage.visibility = View.VISIBLE
-            deleteUpdateLayout.visibility = View.VISIBLE
-            lotteImage.visibility = View.GONE
-
-            addTaskText.requestFocus()
-            AddTaskDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            addTaskDetailsText.visibility = View.VISIBLE
-            addDateChipText.visibility = View.VISIBLE
-            addTaskUpdateText.text = "Update"
-
-            addTaskText.setText(inCompleteItems.taskName)
-            addTaskDetailsText.setText(inCompleteItems.taskDetails)
-            addDateChipText.text = inCompleteItems.taskCompleteUpToDate
-
-            if (!inCompleteItems.isImportant) {
-                addImportantButton.setImageResource(R.drawable.icon_mark_not_important)
-            } else {
-                addImportantButton.setImageResource(R.drawable.icon_mark_important)
-            }
-
-            isDetailVisible = true
-            addDetailsButton.setImageResource(R.drawable.icon_details_selected)
-            addDateButton.setImageResource(R.drawable.icon_date_selected)
-
-            addDetailsButton.setOnClickListener {
-                if (!isDetailVisible) {
-                    addTaskDetailsText.visibility = View.VISIBLE
-                    addDetailsButton.setImageResource(R.drawable.icon_details_selected)
-                    isDetailVisible = true
-                } else {
-                    addTaskDetailsText.text.clear()
-                    addTaskDetailsText.visibility = View.GONE
-                    addDetailsButton.setImageResource(R.drawable.icon_details)
-                    isDetailVisible = false
-                }
-            }
-
-            addDateButton.setOnClickListener {
-                if (!isDateVisible) {
-                    addDateButton.setImageResource(R.drawable.icon_date_selected)
-                    showDatePickerDialog(addDateChipText, addDateButton)
-                } else {
-                    addDateChipText.text = ""
-                    addDateChipText.visibility = View.GONE
-                    addDateButton.setImageResource(R.drawable.icon_date)
-                    val sharedPreferences =
-                        requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
-                    sharedPreferences.edit().clear().apply()
-                    isDateVisible = false
-                }
-            }
-
-            addDateChipText.setOnClickListener {
-                showDatePickerDialog(addDateChipText, addDateButton)
-            }
-
-            addImportantButton.setOnClickListener {
-                if (!inCompleteItems.isImportant) {
-                    addImportantButton.setImageResource(R.drawable.icon_mark_important)
-                    inCompleteItems.isImportant = true
-                } else {
-                    inCompleteItems.isImportant = false
-                    addImportantButton.setImageResource(R.drawable.icon_mark_not_important)
-                }
-            }
-
-            addTaskUpdateText.setOnClickListener {
-                val taskName = addTaskText.text.toString()
-                val taskDetails = addTaskDetailsText.text.toString()
-                val taskDate = addDateChipText.text.toString()
-                val taskId = inCompleteItems.id
-                val important = inCompleteItems.isImportant
-
-                if (taskName.isNotEmpty()) {
-                    val taskReference = incompleteTasksRef.child(taskId)
-                    val updatedTask =
-                        DataToDo(taskId, taskName, taskDetails, taskDate, important)
-                    taskReference.setValue(updatedTask).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT).show()
-                        }
-                    }.addOnFailureListener {
-                        Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
-                    }
-                    AddTaskDialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Please Enter Task Name", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            addTaskDeleteText.setOnClickListener {
-                val taskId = inCompleteItems.id
-                if (taskId.isNotEmpty()) {
-                    val taskReference = incompleteTasksRef.child(taskId)
-                    taskReference.removeValue().addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show()
-                            adapterToDoInComplete.notifyDataSetChanged()
-                        } else {
-                            Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                    AddTaskDialog.dismiss()
-                }
-            }
-
-            AddTaskDialog.show()
         }
 
+
     }
 
-    override fun onItemCheckedChange(position: Int, isChecked: Boolean) {
+    override fun onItemClickListener(position: Int, isComplete: Boolean) {
+        val AddTaskDialog =
+            BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
+        val AddTaskView = layoutInflater.inflate(R.layout.bottomsheet_add_task, null)
+        AddTaskDialog.setContentView(AddTaskView)
+        AddTaskDialog.setCanceledOnTouchOutside(true)
+
+        val updateImage = AddTaskView.findViewById<ImageView>(R.id.updateImage)
+        val lotteImage = AddTaskView.findViewById<LottieAnimationView>(R.id.lotteView)
+        val deleteUpdateLayout = AddTaskView.findViewById<LinearLayout>(R.id.updateDeleteLayout)
+
+        val addTaskText = AddTaskView.findViewById<EditText>(R.id.addTaskEditText)
+        val addTaskDetailsText = AddTaskView.findViewById<EditText>(R.id.addDetailsEditText)
+        val addDateChipText = AddTaskView.findViewById<Chip>(R.id.addDateChipText)
+        val addTaskUpdateText = AddTaskView.findViewById<TextView>(R.id.addTaskOKText)
+        val addTaskDeleteText = AddTaskView.findViewById<TextView>(R.id.addTaskDeleteText)
+        val addTaskMarkAsCompletedText =
+            AddTaskView.findViewById<TextView>(R.id.addTaskMarkAsCompletedText)
+
+        val addDateButton = AddTaskView.findViewById<ImageView>(R.id.addDateButton)
+        val addDetailsButton = AddTaskView.findViewById<ImageView>(R.id.addDetailsButton)
+        val addImportantButton = AddTaskView.findViewById<ImageView>(R.id.addImportantButton)
+
+        addTaskText.requestFocus()
+        AddTaskDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        addTaskDetailsText.visibility = View.VISIBLE
+        addDateChipText.visibility = View.VISIBLE
+        addTaskUpdateText.text = "Update"
+
+        updateImage.visibility = View.VISIBLE
+        deleteUpdateLayout.visibility = View.VISIBLE
+        lotteImage.visibility = View.GONE
+
+        isDetailVisible = true
+        addDetailsButton.setImageResource(R.drawable.icon_details_selected)
+        addDateButton.setImageResource(R.drawable.icon_date_selected)
+
+        addDetailsButton.setOnClickListener {
+            if (!isDetailVisible) {
+                addTaskDetailsText.visibility = View.VISIBLE
+                addDetailsButton.setImageResource(R.drawable.icon_details_selected)
+                isDetailVisible = true
+            } else {
+                addTaskDetailsText.text.clear()
+                addTaskDetailsText.visibility = View.GONE
+                addDetailsButton.setImageResource(R.drawable.icon_details)
+                isDetailVisible = false
+            }
+        }
+
+        addDateButton.setOnClickListener {
+            if (!isDateVisible) {
+                addDateButton.setImageResource(R.drawable.icon_date_selected)
+                showDatePickerDialog(addDateChipText, addDateButton)
+            } else {
+                addDateChipText.text = ""
+                addDateChipText.visibility = View.GONE
+                addDateButton.setImageResource(R.drawable.icon_date)
+                val sharedPreferences =
+                    requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
+                sharedPreferences.edit().clear().apply()
+                isDateVisible = false
+            }
+        }
+
+        addDateChipText.setOnClickListener {
+            showDatePickerDialog(addDateChipText, addDateButton)
+        }
+
+
+        val tasksRef = if (isComplete) {
+            dataBaseRef.child("completeTasks")
+        } else {
+            dataBaseRef.child("incompleteTasks")
+        }
+
+        val currentItems = if (isComplete) {
+            completeList[position]
+        } else {
+            inCompleteList[position]
+        }
+
+
+        addTaskText.setText(currentItems.taskName)
+        addTaskDetailsText.setText(currentItems.taskDetails)
+        addDateChipText.text = currentItems.taskCompleteUpToDate
+
+        val importantButtonImage = if (currentItems.isImportant) {
+            R.drawable.icon_mark_important
+        } else {
+            R.drawable.icon_mark_not_important
+        }
+
+        addImportantButton.setImageResource(importantButtonImage)
+
+        addImportantButton.setOnClickListener {
+            currentItems.isImportant = !currentItems.isImportant
+            val updatedImage = if (currentItems.isImportant) {
+                R.drawable.icon_mark_important
+            } else {
+                R.drawable.icon_mark_not_important
+            }
+            addImportantButton.setImageResource(updatedImage)
+        }
+
+        addTaskUpdateText.setOnClickListener {
+            val taskName = addTaskText.text.toString()
+            val taskDetails = addTaskDetailsText.text.toString()
+            val taskDate = addDateChipText.text.toString()
+            val taskId = currentItems.id
+            val important = currentItems.isImportant
+            val checkBox = currentItems.isChecked
+
+            if (taskName.isNotEmpty()) {
+                val taskReference = tasksRef.child(taskId)
+                val updatedTask = DataToDo(taskId, taskName, taskDetails, taskDate, important,checkBox)
+                taskReference.setValue(updatedTask).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener {
+                    Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+                AddTaskDialog.dismiss()
+            } else {
+                Toast.makeText(context, "Please Enter Task Name", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        addTaskDeleteText.setOnClickListener {
+            val taskId = currentItems.id
+            if (taskId.isNotEmpty()) {
+                val taskReference = tasksRef.child(taskId)
+                taskReference.removeValue().addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show()
+                        if (isComplete) {
+                            adapterToDoInComplete.notifyDataSetChanged()
+                        }
+                    } else {
+                        Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                AddTaskDialog.dismiss()
+            }
+        }
+
+        AddTaskDialog.show()
+
+        val completeListSize = completeList.size
+        val inCompleteListSize = inCompleteList.size
 
         Log.d(
-            "CheckboxClick",
-            "onItemCheckedChange called with position=$position, isChecked=$isChecked"
+            "ListSize",
+            "Complete List Size: $completeListSize, Incomplete List Size: $inCompleteListSize"
         )
+
+    }
+
+
+    override fun onItemCheckedChange(position: Int, isChecked: Boolean, isCompleteList: Boolean) {
 
         val incompleteTasksRef = dataBaseRef.child("incompleteTasks")
         val completeTasksRef = dataBaseRef.child("completeTasks")
 
-        if (isChecked && inCompleteList.size > position) {
-            val inCompletedItem = inCompleteList[position]
-            Log.d("CheckboxClick", "Moving item to completeTasks")
+        if (isCompleteList) {
+            if (!isChecked && completeList.size > position) {
+                val completedItem = completeList[position]
+                val taskId = completedItem.id
+                completeTasksRef.child(taskId).removeValue()
 
-            val taskId = inCompletedItem.id
-            incompleteTasksRef.child(taskId).removeValue()
+                val incompleteTask = DataToDo(
+                    taskId,
+                    completedItem.taskName,
+                    completedItem.taskDetails,
+                    completedItem.taskCompleteUpToDate,
+                    completedItem.isImportant,
+                    false
+                )
+                incompleteTasksRef.child(taskId).setValue(incompleteTask)
 
-            val completeTask = DataToDo(
-                taskId,
-                inCompletedItem.taskName,
-                inCompletedItem.taskDetails,
-                inCompletedItem.taskCompleteUpToDate,
-                inCompletedItem.isImportant,
-                true
-            )
-            completeTasksRef.child(taskId).setValue(completeTask)
+                adapterToDoComplete.notifyDataSetChanged()
+                adapterToDoInComplete.notifyDataSetChanged()
+                Toast.makeText(context, "Task Marked as InComplete", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            if (isChecked && inCompleteList.size > position) {
+                val inCompletedItem = inCompleteList[position]
 
-            adapterToDoComplete.notifyDataSetChanged()
-            adapterToDoInComplete.notifyDataSetChanged()
-            Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
-        } else if (!isChecked && completeList.size > position) {
-            val completedItem = completeList[position]
-            Log.d("CheckboxClick", "Moving item back to incompleteTasks")
+                val taskId = inCompletedItem.id
+                incompleteTasksRef.child(taskId).removeValue()
 
-            val taskId = completedItem.id
+                val completeTask = DataToDo(
+                    taskId,
+                    inCompletedItem.taskName,
+                    inCompletedItem.taskDetails,
+                    inCompletedItem.taskCompleteUpToDate,
+                    inCompletedItem.isImportant,
+                    true
+                )
+                completeTasksRef.child(taskId).setValue(completeTask)
 
-            completeTasksRef.child(taskId).removeValue()
-
-            val incompleteTask = DataToDo(
-                taskId,
-                completedItem.taskName,
-                completedItem.taskDetails,
-                completedItem.taskCompleteUpToDate,
-                completedItem.isImportant,
-                false
-            )
-            incompleteTasksRef.child(taskId).setValue(incompleteTask)
-
-            adapterToDoComplete.notifyDataSetChanged()
-            adapterToDoInComplete.notifyDataSetChanged()
-            Toast.makeText(context, "Task Marked as InComplete", Toast.LENGTH_SHORT).show()
+                adapterToDoComplete.notifyDataSetChanged()
+                adapterToDoInComplete.notifyDataSetChanged()
+                Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 
+    }
 
     private fun showDatePickerDialog(addDateChipText: Chip, addDateButton: ImageView) {
 

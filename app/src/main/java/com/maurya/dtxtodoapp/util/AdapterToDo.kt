@@ -1,6 +1,7 @@
 package com.maurya.dtxtodoapp.util
 
 import android.content.Context
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,17 @@ class AdapterToDo(
         val currentItem = currentList[position]
 
         with(holder) {
+
+
             taskName.text = currentItem.taskName
             taskDetails.text = currentItem.taskDetails
             taskCompleteUpToDate.text = currentItem.taskCompleteUpToDate
+
+            if (isComplete) {
+                taskName.paintFlags = taskName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                taskName.paintFlags = taskName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
 
             if (currentItem.taskDetails.isEmpty()) {
                 taskDetails.visibility = View.GONE
@@ -62,7 +71,7 @@ class AdapterToDo(
         val taskName = binding.taskNameTaskItem
         val taskDetails = binding.taskDetailsTaskItem
         val taskCompleteUpToDate = binding.taskCompleteUpToDateTaskItem
-        val root = binding.root
+        private val root = binding.root
         val checkbox = binding.checkboxTaskItem
         val important = binding.taskImportantTaskItem
 
@@ -71,7 +80,7 @@ class AdapterToDo(
             checkbox.setOnCheckedChangeListener { _, isChecked ->
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemCheckedChange(position, isChecked)
+                    listener.onItemCheckedChange(position, isChecked,isComplete)
                 }
             }
         }
