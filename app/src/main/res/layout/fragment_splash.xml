@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/light_black"
-    tools:context=".SplashFragment">
+    style="@style/StatusBarLayoutStyle"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".Fragments.SplashFragment">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lotteView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        style="@style/LottieFile"
         android:layout_gravity="center"
-        app:lottie_fileName="dtxToDoCheck1"
         android:scaleType="fitCenter"
         app:lottie_autoPlay="true"
         app:lottie_loop="true" />
 
 
 
-</FrameLayout>
+</LinearLayout>

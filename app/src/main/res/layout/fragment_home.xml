@@ -1,40 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    android:orientation="vertical"
+    tools:context=".Fragments.HomeFragment">
 
-
-    <LinearLayout
+    <TextView
         android:id="@+id/topLayout"
         style="@style/StatusBarLayoutStyle"
         android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:text="To Do List"
+        android:textSize="40sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewInCompleteHomeFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_below="@id/topLayout"
+        android:layout_marginTop="20dp"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:id="@+id/completedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recyclerViewInCompleteHomeFragment"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_ripplefactor"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:visibility="visible">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/taskCompleteUpToDateTaskItem"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:padding="15dp"
-            android:text="To Do List"
-            android:textSize="40sp" />
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="Completed"
+            android:textSize="16sp" />
 
-        <LinearLayout
-            android:id="@+id/visibilityTopToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/icon_completed_visible" />
 
-            <include
-                android:id="@+id/cab_top_toolbar_internal"
-                layout="@layout/cab_top_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCompleteHomeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/completedLayout"
+        android:scrollbars="vertical" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/addTaskHomeFragment"
+            style="@style/AddTaskStyle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end"
+            android:layout_margin="8dp"
+            android:elevation="2dp"
+            android:scaleType="fitCenter"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="dtxToDoAppPlus.json"
+            app:lottie_loop="true" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

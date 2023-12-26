@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Base application theme. -->
     <style name="Theme.DTxToDoApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
@@ -8,10 +8,9 @@
     </style>
 
 
-
     <!--  layout style-->
     <style name="LayoutStyle">
-        <item name="android:background">#000000</item>
+        <item name="android:background">#111C25</item>
     </style>
 
 
@@ -32,7 +31,6 @@
     </style>
 
 
-
     <!-- StatusBarSearchLayoutStyle-->
     <style name="StatusBarSearchLayoutStyle">
         <item name="android:background">@drawable/mode_dark_bg_toolbar</item>
@@ -43,5 +41,30 @@
     <style name="StatusBarLayoutStyle">
         <item name="android:background">@drawable/mode_night_bg_custom_appbar</item>
     </style>
+
+
+    <!-- BottomBarLayoutStyle-->
+    <style name="BottomBarLayoutStyle">
+        <item name="android:background">@color/light_black</item>
+    </style>
+
+    <!--    AddTask-->
+    <style name="AddTaskStyle">
+        <item name="android:background">@drawable/bg_dark</item>
+    </style>
+
+
+    <!--    LottieBg-->
+    <style name="LottieFile">
+        <item name="lottie_fileName">"dtxToDoCheck2.json"</item>
+    </style>
+
+
+    <!--  TaskItemStyle-->
+    <style name="TaskItemStyle">
+        <item name="android:background">@color/statusBarDark</item>
+    </style>
+
+
 
 </resources>

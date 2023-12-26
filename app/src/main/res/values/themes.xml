@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Base application theme. -->
     <style name="Theme.DTxToDoApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -48,6 +48,27 @@
     <!-- StatusBarLayoutStyle-->
     <style name="StatusBarLayoutStyle">
         <item name="android:background">@drawable/mode_light_bg_custom_appbar</item>
+    </style>
+
+    <!-- BottomBarLayoutStyle-->
+    <style name="BottomBarLayoutStyle">
+        <item name="android:background">@color/statusBarLight</item>
+    </style>
+
+
+    <!--    AddTask-->
+    <style name="AddTaskStyle">
+        <item name="android:background">@drawable/bg_light</item>
+    </style>
+
+    <!--    LottieBg-->
+    <style name="LottieFile">
+        <item name="lottie_fileName">"dtxToDoCheck1.json"</item>
+    </style>
+
+    <!--  TaskItemStyle-->
+    <style name="TaskItemStyle">
+        <item name="android:background">#FFFFFF</item>
     </style>
 
 </resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pop_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/TaskItemStyle"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:paddingStart="40dp"
+            android:id="@+id/checkboxTaskItem"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:button="@drawable/bg_checkbox"
+            android:visibility="visible" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/taskNameTaskItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:text="Your Full Music Name Here"
+                android:textSize="17sp" />
+
+
+            <TextView
+                android:id="@+id/taskDetailsTaskItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:singleLine="true"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:text="dd/mm/yyyy hh:mm"
+                android:textSize="13sp" />
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/taskCompleteUpToDateTaskItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dd/mm/yyyy hh:mm"
+                android:textSize="13sp"
+                app:chipBackgroundColor="@android:color/transparent"
+                app:chipSurfaceColor="@android:color/transparent" />
+
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/taskImportantTaskItem"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/icon_mark_not_important" />
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
+
+
+

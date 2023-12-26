@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/LayoutStyle"
-    tools:context=".SignInFragment">
+    tools:context=".Fragments.SignInFragment">
+
 
     <LinearLayout
         android:id="@+id/topLayout"
@@ -24,7 +25,6 @@
             android:textSize="40sp" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/middleLayout"
@@ -117,9 +117,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/white"
                 android:gravity="center"
                 android:paddingStart="5dp"
+                style="@style/LayoutStyle"
                 android:paddingEnd="5dp"
                 android:text="OR" />
 
@@ -146,12 +146,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        style="@style/BottomBarLayoutStyle"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_colour" />
 
         <TextView
             android:id="@+id/dontHaveAccountSignInFragment"

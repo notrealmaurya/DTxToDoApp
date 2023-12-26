@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".SignUpFragment">
+    tools:context=".Fragments.SignUpFragment">
 
 
     <LinearLayout
@@ -68,10 +68,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/white"
                 android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
+                style="@style/LayoutStyle"
                 android:text="OR" />
 
         </FrameLayout>
@@ -86,9 +86,8 @@
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:padding="8dp"
             android:paddingStart="20dp"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/passwordSignUpFragment"
@@ -100,9 +99,8 @@
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:padding="8dp"
             android:paddingStart="20dp"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/passwordConfirmSignUpFragment"
@@ -114,9 +112,8 @@
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:padding="8dp"
             android:paddingStart="20dp"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
 
         <FrameLayout
@@ -162,12 +159,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        style="@style/BottomBarLayoutStyle"
         android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_colour" />
 
         <TextView
             android:id="@+id/haveAccountSignUpFragment"
