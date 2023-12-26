@@ -50,25 +50,6 @@ class AdapterToDo(
 
     }
 
-    fun addInCompleteItem(item: DataToDo) {
-        incompleteList.add(item)
-        notifyItemInserted(incompleteList.size - 1)
-    }
-
-    fun removeInCompleteItem(position: Int) {
-        incompleteList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun addCompleteItem(item: DataToDo) {
-        completeList.add(item)
-        notifyItemInserted(completeList.size - 1)
-    }
-
-    fun removeCompleteItem(position: Int) {
-        completeList.removeAt(position)
-        notifyItemRemoved(position)
-    }
 
     override fun getItemCount(): Int {
         return if (isComplete) completeList.size else incompleteList.size

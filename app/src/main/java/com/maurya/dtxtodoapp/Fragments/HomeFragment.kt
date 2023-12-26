@@ -567,8 +567,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
             )
             completeTasksRef.child(taskId).setValue(completeTask)
 
-            adapterToDoInComplete.removeInCompleteItem(position)
-            adapterToDoComplete.addCompleteItem(completeTask)
+            adapterToDoComplete.notifyDataSetChanged()
+            adapterToDoInComplete.notifyDataSetChanged()
             Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
         } else if (!isChecked && completeList.size > position) {
             val completedItem = completeList[position]
@@ -588,8 +588,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
             )
             incompleteTasksRef.child(taskId).setValue(incompleteTask)
 
-            adapterToDoComplete.removeCompleteItem(position)
-            adapterToDoInComplete.addInCompleteItem(incompleteTask)
+            adapterToDoComplete.notifyDataSetChanged()
+            adapterToDoInComplete.notifyDataSetChanged()
             Toast.makeText(context, "Task Marked as InComplete", Toast.LENGTH_SHORT).show()
         }
     }
