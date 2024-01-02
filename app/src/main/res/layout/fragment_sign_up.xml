@@ -82,7 +82,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/edittext_bg"
-            android:hint="Phone Number or email "
+            android:hint="Email "
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="text"

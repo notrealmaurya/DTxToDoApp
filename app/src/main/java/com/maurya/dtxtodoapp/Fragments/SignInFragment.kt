@@ -56,11 +56,14 @@ class SignInFragment : Fragment() {
             }
         }
 
-        fragmentSignInBinding.loginGoogleButtonSignInFragment
+        fragmentSignInBinding.loginGoogleButtonSignInFragment.setOnClickListener{
+            Toast.makeText(context,"Feature coming soon",Toast.LENGTH_SHORT).show()
+        }
 
-        fragmentSignInBinding.forgetPasswordSignInFragment
+        fragmentSignInBinding.forgetPasswordSignInFragment.setOnClickListener{
+            Toast.makeText(context,"Feature coming soon",Toast.LENGTH_SHORT).show()
+        }
 
-        fragmentSignInBinding.progressBaSignInFragment
     }
 
     private fun signIn() {

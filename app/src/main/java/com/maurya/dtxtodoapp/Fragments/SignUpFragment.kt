@@ -55,12 +55,11 @@ class SignUpFragment : Fragment() {
             if (isValidSignUpDetails()) {
                 signUp()
             }
+        }
 
 
-
-            fragmentSignUpBinding.loginGoogleButtonSignUpFragment
-
-
+        fragmentSignUpBinding.loginGoogleButtonSignUpFragment.setOnClickListener {
+            Toast.makeText(context, "Feature coming soon", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -113,7 +112,9 @@ class SignUpFragment : Fragment() {
         } else if (fragmentSignUpBinding.passwordSignUpFragment.text.toString().trim().isEmpty()) {
             showToast("Enter Password ")
             false
-        } else if (fragmentSignUpBinding.passwordConfirmSignUpFragment.text.toString().trim().isEmpty()) {
+        } else if (fragmentSignUpBinding.passwordConfirmSignUpFragment.text.toString().trim()
+                .isEmpty()
+        ) {
             showToast("Confirm your Password")
             false
         } else if (fragmentSignUpBinding.passwordSignUpFragment.text.toString() != fragmentSignUpBinding.passwordConfirmSignUpFragment.text.toString()
@@ -128,7 +129,6 @@ class SignUpFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
-
 
 
 }

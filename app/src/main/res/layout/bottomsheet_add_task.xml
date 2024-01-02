@@ -21,8 +21,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            app:lottie_autoPlay="true"
             android:visibility="visible"
+            app:lottie_autoPlay="true"
             app:lottie_fileName="dtxToDoAppAddTask.json"
             app:lottie_loop="true" />
 
@@ -33,9 +33,8 @@
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:visibility="gone"
             android:src="@drawable/icon_update"
-            />
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/addTaskEditText"
@@ -58,7 +57,6 @@
             android:hint="Add details"
             android:textSize="16sp"
             android:visibility="gone" />
-
 
         <com.google.android.material.chip.Chip
             android:id="@+id/addDateChipText"
@@ -127,9 +125,9 @@
                     android:background="@drawable/bg_ripplefactor"
                     android:clickable="true"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:text="Save"
-                    android:padding="10dp"
                     android:textColor="#00B7FF"
                     android:textSize="16sp" />
 
@@ -138,48 +136,23 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/updateDeleteLayout"
+        <TextView
+            android:id="@+id/addTaskDeleteText"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_gravity="end"
+            android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="5dp"
-            android:clickable="false"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/addTaskDeleteText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="@drawable/bg_ripplefactor"
-                android:clickable="true"
-                android:gravity="center"
-                android:singleLine="true"
-                android:padding="10dp"
-                android:text="Delete"
-                android:layout_weight="1"
-                android:textColor="#FF0000"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/addTaskMarkAsCompletedText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="@drawable/bg_ripplefactor"
-                android:clickable="true"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Mark as completed"
-                android:padding="10dp"
-                android:textColor="#00B7FF"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+            android:visibility="gone"
+            android:background="@drawable/bg_ripplefactor"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="Delete"
+            android:textColor="#FF0000"
+            android:textSize="16sp" />
 
 
     </LinearLayout>

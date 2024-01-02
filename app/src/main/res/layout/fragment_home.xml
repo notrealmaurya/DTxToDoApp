@@ -3,21 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LayoutStyle"
+    android:id="@+id/homeRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
-    <TextView
+    <LinearLayout
         android:id="@+id/topLayout"
-        style="@style/StatusBarLayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="135dp"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
         android:paddingStart="30dp"
-        android:text="To Do List"
-        android:textSize="40sp" />
+        style="@style/StatusBarLayoutStyle"
+        android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="135dp"
+            android:gravity="center_vertical"
+            android:text="To Do List"
+            android:layout_weight="1"
+            android:textSize="40sp" />
+
+        <ImageView
+            android:id="@+id/logOutUser"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_user"
+            android:layout_marginEnd="30dp"
+            android:layout_gravity="center"
+            />
+
+
+
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -27,8 +46,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="70dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="70dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewInCompleteHomeFragment"

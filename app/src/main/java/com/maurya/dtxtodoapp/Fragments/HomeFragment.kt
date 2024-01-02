@@ -1,7 +1,11 @@
 package com.maurya.dtxtodoapp.Fragments
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,10 +20,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -31,6 +37,7 @@ import com.maurya.dtxtodoapp.databinding.FragmentHomeBinding
 import com.maurya.dtxtodoapp.util.AdapterToDo
 import com.maurya.dtxtodoapp.util.DataToDo
 import com.maurya.dtxtodoapp.util.OnItemClickListener
+import com.maurya.dtxtodoapp.util.checkInternet
 import com.maurya.dtxtodoapp.util.formatDate
 import java.util.Calendar
 
@@ -61,6 +68,7 @@ class HomeFragment : Fragment(), OnItemClickListener {
         val view = fragmentHomeBinding.root
 
 
+
         auth = FirebaseAuth.getInstance()
         dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
             .child(auth.currentUser?.uid.toString())
@@ -68,13 +76,12 @@ class HomeFragment : Fragment(), OnItemClickListener {
         inCompleteList = mutableListOf()
         completeList = mutableListOf()
 
-
-        fragmentHomeBinding.recyclerViewCompleteHomeFragment.isNestedScrollingEnabled=false
-        fragmentHomeBinding.recyclerViewInCompleteHomeFragment.isNestedScrollingEnabled=false
+        fragmentHomeBinding.recyclerViewCompleteHomeFragment.isNestedScrollingEnabled = false
+        fragmentHomeBinding.recyclerViewInCompleteHomeFragment.isNestedScrollingEnabled = false
 
         fetchDataFromDatabase()
-        listeners()
         displayItems()
+        listeners()
 
         return view;
     }
@@ -110,13 +117,12 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
                 adapterToDoInComplete.notifyDataSetChanged()
                 adapterToDoComplete.notifyDataSetChanged()
-                if (completeList.isEmpty()){
-                    fragmentHomeBinding.completedLayout.visibility=View.GONE
-                    fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility=View.GONE
-                }
-                else{
-                    isRecyclerViewVisible=false
-                    fragmentHomeBinding.completedLayout.visibility=View.VISIBLE
+                if (completeList.isEmpty()) {
+                    fragmentHomeBinding.completedLayout.visibility = View.GONE
+                    fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility = View.GONE
+                } else {
+                    isRecyclerViewVisible = false
+                    fragmentHomeBinding.completedLayout.visibility = View.VISIBLE
                     fragmentHomeBinding.completedImage.setImageResource(R.drawable.icon_completed_invisible)
 
                 }
@@ -147,10 +153,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
             DataToDo(taskId, taskName, taskDetails, taskCompleteUpToDate, isImportant, isChecked)
 
         if (isChecked) {
-            Log.d("CheckboxClick", "InProcessTaskisChecked")
             newCompleteList.add(toDoTask)
         } else {
-            Log.d("CheckboxClick", "InProcessTaskNotChecked")
             newInCompleteList.add(toDoTask)
         }
     }
@@ -276,7 +280,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
         }
 
-
         fragmentHomeBinding.completedLayout.setOnClickListener {
             isRecyclerViewVisible = !isRecyclerViewVisible // Toggle the visibility state
 
@@ -287,6 +290,27 @@ class HomeFragment : Fragment(), OnItemClickListener {
                 fragmentHomeBinding.completedImage.setImageResource(R.drawable.icon_completed_invisible)
                 fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility = View.GONE
             }
+        }
+
+        fragmentHomeBinding.logOutUser.setOnClickListener {
+
+            val userName = auth.currentUser?.email ?: "User"
+
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.setTitle("Logout")
+            alertDialogBuilder.setMessage("Are you sure you want to logout, $userName?")
+
+            alertDialogBuilder.setPositiveButton("Logout") { _, _ ->
+                auth.signOut()
+                findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
+            }
+
+            alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
         }
 
 
@@ -301,15 +325,12 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
         val updateImage = AddTaskView.findViewById<ImageView>(R.id.updateImage)
         val lotteImage = AddTaskView.findViewById<LottieAnimationView>(R.id.lotteView)
-        val deleteUpdateLayout = AddTaskView.findViewById<LinearLayout>(R.id.updateDeleteLayout)
 
         val addTaskText = AddTaskView.findViewById<EditText>(R.id.addTaskEditText)
         val addTaskDetailsText = AddTaskView.findViewById<EditText>(R.id.addDetailsEditText)
         val addDateChipText = AddTaskView.findViewById<Chip>(R.id.addDateChipText)
         val addTaskUpdateText = AddTaskView.findViewById<TextView>(R.id.addTaskOKText)
         val addTaskDeleteText = AddTaskView.findViewById<TextView>(R.id.addTaskDeleteText)
-        val addTaskMarkAsCompletedText =
-            AddTaskView.findViewById<TextView>(R.id.addTaskMarkAsCompletedText)
 
         val addDateButton = AddTaskView.findViewById<ImageView>(R.id.addDateButton)
         val addDetailsButton = AddTaskView.findViewById<ImageView>(R.id.addDetailsButton)
@@ -322,7 +343,7 @@ class HomeFragment : Fragment(), OnItemClickListener {
         addTaskUpdateText.text = "Update"
 
         updateImage.visibility = View.VISIBLE
-        deleteUpdateLayout.visibility = View.VISIBLE
+        addTaskDeleteText.visibility = View.VISIBLE
         lotteImage.visibility = View.GONE
 
         isDetailVisible = true
@@ -374,7 +395,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
             inCompleteList[position]
         }
 
-
         addTaskText.setText(currentItems.taskName)
         addTaskDetailsText.setText(currentItems.taskDetails)
         addDateChipText.text = currentItems.taskCompleteUpToDate
@@ -397,6 +417,9 @@ class HomeFragment : Fragment(), OnItemClickListener {
             addImportantButton.setImageResource(updatedImage)
         }
 
+        // Check if the task is complete and set the appropriate click listener
+
+
         addTaskUpdateText.setOnClickListener {
             val taskName = addTaskText.text.toString()
             val taskDetails = addTaskDetailsText.text.toString()
@@ -407,7 +430,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
             if (taskName.isNotEmpty()) {
                 val taskReference = tasksRef.child(taskId)
-                val updatedTask = DataToDo(taskId, taskName, taskDetails, taskDate, important,checkBox)
+                val updatedTask =
+                    DataToDo(taskId, taskName, taskDetails, taskDate, important, checkBox)
                 taskReference.setValue(updatedTask).addOnCompleteListener {
                     if (it.isSuccessful) {
                         Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT).show()
@@ -571,11 +595,19 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
+
+        if (!checkInternet(requireContext())) {
+            Snackbar.make(
+                fragmentHomeBinding.root,
+                "Internet is Not Connected \uD83D\uDE12", Snackbar.LENGTH_LONG
+            ).show();
+        }
+
+
         val sharedPreferences =
             requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
         sharedPreferences.edit().clear().apply()
     }
-
 
 }
 
