@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.maurya.dtxtodoapp.Fragments.SplashFragment"
+        android:name="com.maurya.dtxtodoapp.fragments.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.maurya.dtxtodoapp.Fragments.SignInFragment"
+        android:name="com.maurya.dtxtodoapp.fragments.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.maurya.dtxtodoapp.Fragments.SignUpFragment"
+        android:name="com.maurya.dtxtodoapp.fragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.maurya.dtxtodoapp.Fragments.HomeFragment"
+        android:name="com.maurya.dtxtodoapp.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action

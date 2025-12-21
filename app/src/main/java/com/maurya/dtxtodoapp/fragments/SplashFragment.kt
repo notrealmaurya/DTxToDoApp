@@ -1,4 +1,4 @@
-package com.maurya.dtxtodoapp.Fragments
+package com.maurya.dtxtodoapp.fragments
 
 import android.os.Bundle
 import android.os.Handler

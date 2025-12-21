@@ -7,7 +7,7 @@
     style="@style/StatusBarLayoutStyle"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".Fragments.SplashFragment">
+    tools:context=".fragments.SplashFragment">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lotteView"

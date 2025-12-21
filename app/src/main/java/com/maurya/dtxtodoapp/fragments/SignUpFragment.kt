@@ -1,4 +1,4 @@
-package com.maurya.dtxtodoapp.Fragments
+package com.maurya.dtxtodoapp.fragments
 
 import android.os.Bundle
 import android.util.Patterns
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
 import com.maurya.dtxtodoapp.R
 import com.maurya.dtxtodoapp.databinding.FragmentSignUpBinding
+import androidx.navigation.findNavController
 
 
 class SignUpFragment : Fragment() {
@@ -23,7 +23,7 @@ class SignUpFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentSignUpBinding = FragmentSignUpBinding.inflate(inflater, container, false)
         val view = fragmentSignUpBinding.root
@@ -36,7 +36,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = Navigation.findNavController(view)
+        navController = view.findNavController()
 
 
         listeners()
