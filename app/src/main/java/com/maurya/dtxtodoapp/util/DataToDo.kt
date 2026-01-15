@@ -9,14 +9,13 @@ import java.util.Calendar
 import java.util.Locale
 
 data class DataToDo(
-    val id: String,
-    val taskName: String,
-    val taskDetails: String,
-    val taskCompleteUpToDate: String,
-    var isImportant: Boolean,
+    var id: String = "",
+    var taskName: String = "",
+    var taskDetails: String = "",
+    var taskCompleteUpToDate: String = "",
+    var isImportant: Boolean = false,
     var isChecked: Boolean = false
 )
-
 
 fun formatDate(selectedDateMillis: Long): String {
     val currentDate = Calendar.getInstance()

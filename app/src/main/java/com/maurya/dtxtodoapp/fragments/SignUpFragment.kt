@@ -7,20 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maurya.dtxtodoapp.R
 import com.maurya.dtxtodoapp.databinding.FragmentSignUpBinding
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 
 
 class SignUpFragment : Fragment() {
 
     private lateinit var fragmentSignUpBinding: FragmentSignUpBinding
 
-    private lateinit var navController: NavController
-
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +30,6 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = view.findNavController()
-
-        auth = FirebaseAuth.getInstance()
 
         listeners()
 
@@ -44,9 +37,10 @@ class SignUpFragment : Fragment() {
 
     private fun listeners() {
 
+        val auth = FirebaseAuth.getInstance()
 
         fragmentSignUpBinding.haveAccountSignUpFragment.setOnClickListener {
-            navController.navigate(R.id.action_signUpFragment_to_signInFragment)
+            findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
         }
 
         fragmentSignUpBinding.signupButtonSignUpFragment.setOnClickListener {
@@ -64,7 +58,7 @@ class SignUpFragment : Fragment() {
                                 "Registered Successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            navController.navigate(R.id.action_signUpFragment_to_homeFragment)
+                            findNavController().navigate(R.id.action_signUpFragment_to_homeFragment)
                         }
                     }
                     .addOnFailureListener {
