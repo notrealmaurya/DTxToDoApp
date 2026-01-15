@@ -41,41 +41,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginGoogleButtonSignUpFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Log in with Google"
-            android:textAllCaps="false"
-            app:icon="@drawable/icon_google"
-            app:iconPadding="10dp"
-            app:iconTint="@null"
-            app:iconSize="20dp" />
-
-        <FrameLayout
-            android:layout_width="250dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="15dp"
-            android:layout_height="wrap_content">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                style="@style/LayoutStyle"
-                android:text="OR" />
-
-        </FrameLayout>
-
         <EditText
             android:id="@+id/emailSignUpFragment"
             android:layout_width="match_parent"

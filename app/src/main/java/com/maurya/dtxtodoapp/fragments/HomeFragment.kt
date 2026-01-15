@@ -25,7 +25,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.maurya.dtxtodoapp.R
@@ -40,17 +39,26 @@ import java.util.Calendar
 class HomeFragment : Fragment(), OnItemClickListener {
 
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
-    private lateinit var auth: FirebaseAuth
+
     private lateinit var navController: NavController
-    private lateinit var dataBaseRef: DatabaseReference
+
     private var isDetailVisible = false
     private var isDateVisible = false
     private var isImportant: Boolean = false
-    private lateinit var adapterToDoComplete: AdapterToDo
-    private lateinit var adapterToDoInComplete: AdapterToDo
-    private lateinit var inCompleteList: MutableList<DataToDo>
-    private lateinit var completeList: MutableList<DataToDo>
+
+    private var adapterToDoComplete: AdapterToDo? = null
+    private var adapterToDoInComplete: AdapterToDo? = null
+
+    private var inCompleteList: MutableList<DataToDo> = mutableListOf()
+    private var completeList: MutableList<DataToDo> = mutableListOf()
+
     private var isRecyclerViewVisible = false
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapterToDoComplete = null
+        adapterToDoInComplete = null
+    }
 
     companion object {
         private const val KEY_SELECTED_DATE = "KEY_SELECTED_DATE"
@@ -58,31 +66,35 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = fragmentHomeBinding.root
 
+        return view
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        auth = FirebaseAuth.getInstance()
-        dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
-            .child(auth.currentUser?.uid.toString())
+        navController = Navigation.findNavController(view)
 
-        inCompleteList = mutableListOf()
-        completeList = mutableListOf()
+        val auth = FirebaseAuth.getInstance()
 
         fragmentHomeBinding.recyclerViewCompleteHomeFragment.isNestedScrollingEnabled = false
         fragmentHomeBinding.recyclerViewInCompleteHomeFragment.isNestedScrollingEnabled = false
 
-        fetchDataFromDatabase()
+        fetchDataFromDatabase(auth)
         displayItems()
-        listeners()
+        listeners(auth)
 
-        return view;
     }
 
-    private fun fetchDataFromDatabase() {
+
+    private fun fetchDataFromDatabase(auth: FirebaseAuth) {
+
+        val dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
+            .child(auth.currentUser?.uid.toString())
 
         dataBaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -100,7 +112,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
                     processTaskSnapshot(taskSnapshot, newInCompleteList, newCompleteList)
                 }
 
-                // Process Complete Tasks
                 for (taskSnapshot in completeTasksSnapshot.children) {
                     processTaskSnapshot(taskSnapshot, newInCompleteList, newCompleteList)
                 }
@@ -111,8 +122,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
                 completeList.clear()
                 completeList.addAll(newCompleteList)
 
-                adapterToDoInComplete.notifyDataSetChanged()
-                adapterToDoComplete.notifyDataSetChanged()
+                adapterToDoInComplete?.notifyDataSetChanged()
+                adapterToDoComplete?.notifyDataSetChanged()
                 if (completeList.isEmpty()) {
                     fragmentHomeBinding.completedLayout.visibility = View.GONE
                     fragmentHomeBinding.recyclerViewCompleteHomeFragment.visibility = View.GONE
@@ -135,19 +146,17 @@ class HomeFragment : Fragment(), OnItemClickListener {
     private fun processTaskSnapshot(
         taskSnapshot: DataSnapshot,
         newInCompleteList: MutableList<DataToDo>,
-        newCompleteList: MutableList<DataToDo>
+        newCompleteList: MutableList<DataToDo>,
     ) {
-
         val taskId = taskSnapshot.key.orEmpty()
         val taskName = taskSnapshot.child("taskName").getValue(String::class.java).orEmpty()
         val taskDetails = taskSnapshot.child("taskDetails").getValue(String::class.java).orEmpty()
         val taskCompleteUpToDate =
             taskSnapshot.child("taskCompleteUpToDate").getValue(String::class.java).orEmpty()
         val isImportant = taskSnapshot.child("important").getValue(Boolean::class.java) ?: false
-        var isChecked = taskSnapshot.child("checked").getValue(Boolean::class.java) ?: false
+        val isChecked = taskSnapshot.child("checked").getValue(Boolean::class.java) ?: false
         val toDoTask =
             DataToDo(taskId, taskName, taskDetails, taskCompleteUpToDate, isImportant, isChecked)
-
         if (isChecked) {
             newCompleteList.add(toDoTask)
         } else {
@@ -177,7 +186,10 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
     }
 
-    private fun listeners() {
+    private fun listeners(auth: FirebaseAuth) {
+
+        val dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
+            .child(auth.currentUser?.uid.toString())
 
         val incompleteTasksRef = dataBaseRef.child("incompleteTasks")
 
@@ -313,6 +325,9 @@ class HomeFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClickListener(position: Int, isComplete: Boolean) {
+        val dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
+            .child(FirebaseAuth.getInstance().currentUser?.uid.toString())
+
         val AddTaskDialog =
             BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
         val AddTaskView = layoutInflater.inflate(R.layout.bottomsheet_add_task, null)
@@ -413,9 +428,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
             addImportantButton.setImageResource(updatedImage)
         }
 
-        // Check if the task is complete and set the appropriate click listener
-
-
         addTaskUpdateText.setOnClickListener {
             val taskName = addTaskText.text.toString()
             val taskDetails = addTaskDetailsText.text.toString()
@@ -449,7 +461,7 @@ class HomeFragment : Fragment(), OnItemClickListener {
                     if (it.isSuccessful) {
                         Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show()
                         if (isComplete) {
-                            adapterToDoInComplete.notifyDataSetChanged()
+                            adapterToDoInComplete?.notifyDataSetChanged()
                         }
                     } else {
                         Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT).show()
@@ -471,8 +483,10 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
     }
 
-
     override fun onItemCheckedChange(position: Int, isChecked: Boolean, isCompleteList: Boolean) {
+
+        val dataBaseRef = FirebaseDatabase.getInstance().reference.child("Tasks")
+            .child(FirebaseAuth.getInstance().currentUser?.uid.toString())
 
         val incompleteTasksRef = dataBaseRef.child("incompleteTasks")
         val completeTasksRef = dataBaseRef.child("completeTasks")
@@ -493,8 +507,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
                 )
                 incompleteTasksRef.child(taskId).setValue(incompleteTask)
 
-                adapterToDoComplete.notifyDataSetChanged()
-                adapterToDoInComplete.notifyDataSetChanged()
+                adapterToDoComplete?.notifyDataSetChanged()
+                adapterToDoInComplete?.notifyDataSetChanged()
                 Toast.makeText(context, "Task Marked as InComplete", Toast.LENGTH_SHORT).show()
             }
         } else {
@@ -514,8 +528,8 @@ class HomeFragment : Fragment(), OnItemClickListener {
                 )
                 completeTasksRef.child(taskId).setValue(completeTask)
 
-                adapterToDoComplete.notifyDataSetChanged()
-                adapterToDoInComplete.notifyDataSetChanged()
+                adapterToDoComplete?.notifyDataSetChanged()
+                adapterToDoInComplete?.notifyDataSetChanged()
                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
             }
         }
@@ -575,31 +589,20 @@ class HomeFragment : Fragment(), OnItemClickListener {
             set(Calendar.DAY_OF_MONTH, day)
         }.timeInMillis
 
-        // Save the selected date in SharedPreferences
         val sharedPreferences =
             requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
         sharedPreferences.edit().putLong(KEY_SELECTED_DATE, selectedDateMillis).apply()
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        navController = Navigation.findNavController(view)
-
-    }
-
     override fun onResume() {
         super.onResume()
-
         if (!checkInternet(requireContext())) {
             Snackbar.make(
                 fragmentHomeBinding.root,
                 "Internet is Not Connected \uD83D\uDE12", Snackbar.LENGTH_LONG
-            ).show();
+            ).show()
         }
-
-
         val sharedPreferences =
             requireContext().getSharedPreferences("DateCalender", Context.MODE_PRIVATE)
         sharedPreferences.edit().clear().apply()

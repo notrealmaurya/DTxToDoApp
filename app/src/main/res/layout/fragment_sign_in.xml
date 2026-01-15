@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -89,53 +88,6 @@
                 android:visibility="invisible" />
 
         </FrameLayout>
-
-        <TextView
-            android:id="@+id/forgetPasswordSignInFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:text="Forget Your login details? Get help Signing in."
-            android:textSize="14sp"
-            android:textStyle="normal" />
-
-        <FrameLayout
-            android:layout_width="150dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_height="wrap_content">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingStart="5dp"
-                style="@style/LayoutStyle"
-                android:paddingEnd="5dp"
-                android:text="OR" />
-
-        </FrameLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginGoogleButtonSignInFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Log in with Google"
-            android:textAllCaps="false"
-            app:icon="@drawable/icon_google"
-            app:iconPadding="10dp"
-            app:iconTint="@null"
-            app:iconSize="20dp" />
-
 
     </LinearLayout>
 

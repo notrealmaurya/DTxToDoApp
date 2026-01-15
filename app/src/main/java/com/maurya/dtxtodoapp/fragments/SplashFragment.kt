@@ -8,10 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
 import com.maurya.dtxtodoapp.R
 import com.maurya.dtxtodoapp.databinding.FragmentSplashBinding
+import androidx.navigation.findNavController
 
 class SplashFragment : Fragment() {
 
@@ -21,7 +21,7 @@ class SplashFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentSplashBinding = FragmentSplashBinding.inflate(inflater, container, false)
         return fragmentSplashBinding.root
@@ -30,7 +30,7 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = Navigation.findNavController(view)
+        navController = view.findNavController()
         auth = FirebaseAuth.getInstance()
 
         Handler(Looper.myLooper()!!).postDelayed(

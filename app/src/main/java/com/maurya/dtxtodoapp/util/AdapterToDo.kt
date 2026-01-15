@@ -1,6 +1,5 @@
 package com.maurya.dtxtodoapp.util
 
-import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -10,87 +9,72 @@ import com.maurya.dtxtodoapp.R
 import com.maurya.dtxtodoapp.databinding.TaskItemBinding
 
 class AdapterToDo(
-    private val context: Context,
-    private var listener: OnItemClickListener,
+    private val listener: OnItemClickListener,
     private val incompleteList: MutableList<DataToDo> = mutableListOf(),
     private val completeList: MutableList<DataToDo> = mutableListOf(),
     private val isComplete: Boolean
-) : RecyclerView.Adapter<AdapterToDo.ToDoFileHolder>() {
+) : RecyclerView.Adapter<AdapterToDo.ToDoViewHolder>() {
 
+    private val currentList: List<DataToDo>
+        get() = if (isComplete) completeList else incompleteList
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoFileHolder {
-        val binding = TaskItemBinding.inflate(LayoutInflater.from(context), parent, false)
-
-        return ToDoFileHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
+        val binding = TaskItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ToDoViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ToDoFileHolder, position: Int) {
-
-        val currentList = if (isComplete) completeList else incompleteList
-        val currentItem = currentList[position]
-
-        with(holder) {
-
-
-            taskName.text = currentItem.taskName
-            taskDetails.text = currentItem.taskDetails
-            taskCompleteUpToDate.text = currentItem.taskCompleteUpToDate
-
-            if (isComplete) {
-                taskName.paintFlags = taskName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                taskName.paintFlags = taskName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            }
-
-            if (currentItem.taskDetails.isEmpty()) {
-                taskDetails.visibility = View.GONE
-            } else {
-                taskDetails.visibility = View.VISIBLE
-            }
-
-            if (!currentItem.isImportant) {
-                important.setImageResource(R.drawable.icon_mark_not_important)
-            } else {
-                important.setImageResource(R.drawable.icon_mark_important)
-            }
-            checkbox.isChecked = currentItem.isChecked
-        }
-
-
+    override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
+        holder.bind(currentList[position])
     }
 
+    override fun getItemCount(): Int = currentList.size
 
-    override fun getItemCount(): Int {
-        return if (isComplete) completeList.size else incompleteList.size
-    }
+    inner class ToDoViewHolder(
+        private val binding: TaskItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(item: DataToDo) = with(binding) {
 
-    inner class ToDoFileHolder(binding: TaskItemBinding) :
-        RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener {
-        val taskName = binding.taskNameTaskItem
-        val taskDetails = binding.taskDetailsTaskItem
-        val taskCompleteUpToDate = binding.taskCompleteUpToDateTaskItem
-        private val root = binding.root
-        val checkbox = binding.checkboxTaskItem
-        val important = binding.taskImportantTaskItem
+            taskNameTaskItem.text = item.taskName
+            taskDetailsTaskItem.text = item.taskDetails
+            taskCompleteUpToDateTaskItem.text = item.taskCompleteUpToDate
 
-        init {
-            root.setOnClickListener(this)
-            checkbox.setOnCheckedChangeListener { _, isChecked ->
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemCheckedChange(position, isChecked,isComplete)
+            taskNameTaskItem.paintFlags =
+                if (isComplete) {
+                    taskNameTaskItem.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    taskNameTaskItem.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
+
+            taskDetailsTaskItem.visibility =
+                if (item.taskDetails.isBlank()) View.GONE else View.VISIBLE
+
+            taskImportantTaskItem.setImageResource(
+                if (item.isImportant)
+                    R.drawable.icon_mark_important
+                else
+                    R.drawable.icon_mark_not_important
+            )
+
+            checkboxTaskItem.setOnCheckedChangeListener(null)
+            checkboxTaskItem.isChecked = item.isChecked
+            checkboxTaskItem.setOnCheckedChangeListener { _, isChecked ->
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    listener.onItemCheckedChange(pos, isChecked, isComplete)
+                }
+            }
+
+            root.setOnClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    listener.onItemClickListener(pos, isComplete)
                 }
             }
         }
-
-        override fun onClick(p0: View?) {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClickListener(position, isComplete)
-            }
-        }
-
     }
 }

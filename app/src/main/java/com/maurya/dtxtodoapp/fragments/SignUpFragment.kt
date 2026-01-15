@@ -17,9 +17,10 @@ import androidx.navigation.findNavController
 class SignUpFragment : Fragment() {
 
     private lateinit var fragmentSignUpBinding: FragmentSignUpBinding
+
     private lateinit var navController: NavController
+
     private lateinit var auth: FirebaseAuth
-    private var isLoading: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,10 +28,7 @@ class SignUpFragment : Fragment() {
     ): View? {
         fragmentSignUpBinding = FragmentSignUpBinding.inflate(inflater, container, false)
         val view = fragmentSignUpBinding.root
-
-        auth = FirebaseAuth.getInstance()
-
-        return view;
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,9 +36,9 @@ class SignUpFragment : Fragment() {
 
         navController = view.findNavController()
 
+        auth = FirebaseAuth.getInstance()
 
         listeners()
-
 
     }
 
@@ -53,39 +51,29 @@ class SignUpFragment : Fragment() {
 
         fragmentSignUpBinding.signupButtonSignUpFragment.setOnClickListener {
             if (isValidSignUpDetails()) {
-                signUp()
+                loading(true)
+
+                val email = fragmentSignUpBinding.emailSignUpFragment.text.toString().trim()
+                val password = fragmentSignUpBinding.passwordSignUpFragment.text.toString().trim()
+
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Toast.makeText(
+                                context,
+                                "Registered Successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate(R.id.action_signUpFragment_to_homeFragment)
+                        }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                        loading(false)
+                    }
+
             }
         }
-
-
-        fragmentSignUpBinding.loginGoogleButtonSignUpFragment.setOnClickListener {
-            Toast.makeText(context, "Feature coming soon", Toast.LENGTH_SHORT).show()
-        }
-
-
-    }
-
-    private fun signUp() {
-        loading(true)
-
-        val email = fragmentSignUpBinding.emailSignUpFragment.text.toString().trim()
-        val password = fragmentSignUpBinding.passwordSignUpFragment.text.toString().trim()
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "Registered Successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navController.navigate(R.id.action_signUpFragment_to_homeFragment)
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
-                loading(false)
-            }
 
     }
 
@@ -127,7 +115,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
 

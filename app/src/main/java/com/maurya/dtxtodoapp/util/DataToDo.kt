@@ -4,7 +4,6 @@ package com.maurya.dtxtodoapp.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -59,23 +58,16 @@ fun checkInternet(context: Context): Boolean {
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val networkCapabilities =
-            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+    val activeNetwork = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities =
+        connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
-        return when {
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
-        }
-
-    } else {
-        @Suppress("DEPRECATION")
-        val networkInfo = connectivityManager.activeNetworkInfo ?: return false
-
-        return networkInfo.isConnected
+    return when {
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        else -> false
     }
+
 }
 
 

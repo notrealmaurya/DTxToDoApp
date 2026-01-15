@@ -20,7 +20,6 @@ class SignInFragment : Fragment() {
     private lateinit var fragmentSignInBinding: FragmentSignInBinding
     private lateinit var navController: NavController
     private lateinit var auth: FirebaseAuth
-    private var isLoading: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +29,7 @@ class SignInFragment : Fragment() {
         val view = fragmentSignInBinding.root
 
 
-        listeners()
-        return view;
+        return view
     }
 
 
@@ -42,6 +40,7 @@ class SignInFragment : Fragment() {
         navController = view.findNavController()
         auth = FirebaseAuth.getInstance()
 
+        listeners()
 
     }
 
@@ -53,43 +52,28 @@ class SignInFragment : Fragment() {
 
         fragmentSignInBinding.loginButtonSignInFragment.setOnClickListener {
             if (isValidSignUpDetails()) {
-                signIn()
+                loading(true)
+
+                val email = fragmentSignInBinding.emailSignInFragment.text.toString().trim()
+                val password = fragmentSignInBinding.passwordSignInFragment.text.toString().trim()
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                context,
+                                "Signed In",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate(R.id.action_signInFragment_to_homeFragment)
+                        }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                        loading(false)
+                    }
             }
         }
-
-        fragmentSignInBinding.loginGoogleButtonSignInFragment.setOnClickListener{
-            Toast.makeText(context,"Feature coming soon",Toast.LENGTH_SHORT).show()
-        }
-
-        fragmentSignInBinding.forgetPasswordSignInFragment.setOnClickListener{
-            Toast.makeText(context,"Feature coming soon",Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    private fun signIn() {
-
-        loading(true)
-
-        val email = fragmentSignInBinding.emailSignInFragment.text.toString().trim()
-        val password = fragmentSignInBinding.passwordSignInFragment.text.toString().trim()
-
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "Signed In",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navController.navigate(R.id.action_signInFragment_to_homeFragment)
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
-                loading(false)
-            }
-
     }
 
     private fun isValidSignUpDetails(): Boolean {
